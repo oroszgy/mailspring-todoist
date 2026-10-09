@@ -1,0 +1,113 @@
+@import "ui-variables";
+@import "ui-mixins";
+
+.todoist-create-popover {
+  width: 320px;
+  padding: 12px;
+  background: @background-primary;
+  border: 1px solid @border-color-divider;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+
+  .todoist-popover-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .todoist-popover-warning,
+  .todoist-popover-error {
+    color: @text-color-error;
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+
+  .todoist-popover-done {
+    padding: 12px 0;
+    text-align: center;
+  }
+
+  .todoist-field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+
+    > span {
+      font-size: 11px;
+      color: @text-color-subtle;
+      margin-bottom: 3px;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+    }
+  }
+
+  .todoist-due-presets {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+
+    button {
+      flex: 1;
+    }
+  }
+
+  .todoist-popover-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    margin-top: 4px;
+  }
+}
+
+.todoist-preferences {
+  padding: 16px;
+  max-width: 520px;
+
+  .todoist-preferences-intro {
+    color: @text-color-subtle;
+    margin-bottom: 12px;
+  }
+
+  .todoist-field {
+    display: block;
+    margin-bottom: 12px;
+
+    > span {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+    }
+  }
+
+  .todoist-field-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    > span {
+      margin: 0;
+    }
+  }
+
+  .todoist-preferences-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .todoist-preferences-status {
+      color: @text-color-subtle;
+    }
+
+    .todoist-preferences-error {
+      color: @text-color-error;
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "mailspring-todoist",
+  "version": "0.1.0",
+  "description": "Create Todoist tasks straight from Mailspring with one click.",
+  "main": "./lib/main",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "install-local": "node scripts/install-local.js",
+    "clean": "rm -rf lib"
+  },
+  "engines": {
+    "mailspring": ">=1.6.3"
+  },
+  "windowTypes": {
+    "default": true
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "@types/react": "^16.14.0",
+    "typescript": "^5.4.5"
+  }
+}
