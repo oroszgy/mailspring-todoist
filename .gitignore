@@ -5,3 +5,6 @@ node_modules/
 
 # `lib/` is the compiled output that Mailspring loads. It is intentionally
 # committed so the plugin can be installed straight from a git checkout.
+
+.agents/
+.opencode/
