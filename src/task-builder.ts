@@ -37,7 +37,8 @@ export function draftFromThread(thread: any): TaskDraft {
   const settings = getSettings();
   const subject = (thread && thread.subject) || '(no subject)';
 
-  // TODO: include sender/participants once we confirm the Thread shape.
+  // TODO: the sender line is still an open question - see the ticket "How
+  // does a task link back to its email?".
   const link = settings.includeLink
     ? threadDeepLink(subject, thread && thread.lastMessageReceivedTimestamp)
     : null;
@@ -45,22 +46,5 @@ export function draftFromThread(thread: any): TaskDraft {
   return {
     content: subject,
     description: joinSections([thread && thread.snippet, link]),
-  };
-}
-
-export function draftFromMessage(message: any): TaskDraft {
-  const settings = getSettings();
-  const subject = (message && message.subject) || '(no subject)';
-
-  const from = message && message.from ? message.from.email || message.from.name : null;
-  const link = settings.includeLink ? threadDeepLink(subject, message && message.date) : null;
-
-  return {
-    content: subject,
-    description: joinSections([
-      from ? `From: ${from}` : null,
-      settings.includeSnippet ? message && message.snippet : null,
-      link,
-    ]),
   };
 }

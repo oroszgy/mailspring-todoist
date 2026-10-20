@@ -26,13 +26,16 @@ export default class TodoistPreferences extends React.Component<any, TodoistPref
     error: '',
   };
 
-  _update = (key: keyof Settings, value: any) => {
-    setSetting(key, value);
-    this.setState({ settings: getSettings() });
-  };
+  componentDidMount() {
+    const { apiToken } = getSettings();
+    if (!apiToken) return;
 
-  _onTest = () => {
-    const { apiToken } = this.state.settings;
+    // A token is already configured, so the projects can be fetched straight
+    // away rather than waiting for the connection test.
+    this._loadProjects(apiToken);
+  }
+
+  _loadProjects = (apiToken: string) => {
     this.setState({ testing: true, status: '', error: '' });
 
     Todoist.getProjects(apiToken)
@@ -40,10 +43,24 @@ export default class TodoistPreferences extends React.Component<any, TodoistPref
         this.setState({
           projects,
           testing: false,
-          status: `Connected - ${projects.length} project(s) available.`,
+          status: localized('Connected - %@ project(s) available.', projects.length),
         })
       )
       .catch((err) => this.setState({ testing: false, error: err.message }));
+  };
+
+  _update = (key: keyof Settings, value: any) => {
+    setSetting(key, value);
+    this.setState({ settings: getSettings() });
+  };
+
+  _onTest = () => {
+    const { apiToken } = this.state.settings;
+    if (!apiToken) {
+      this.setState({ error: localized('Add a Todoist API token first.') });
+      return;
+    }
+    this._loadProjects(apiToken);
   };
 
   render() {
@@ -57,58 +74,66 @@ export default class TodoistPreferences extends React.Component<any, TodoistPref
           )}
         </p>
 
-        <label className="todoist-field">
-          <span>{localized('API token')}</span>
+        <div className="todoist-field">
+          <label htmlFor="todoist-prefs-token">{localized('API token')}</label>
           <input
+            id="todoist-prefs-token"
             type="password"
             value={settings.apiToken}
             placeholder="0123456789abcdef..."
             onChange={(e: any) => this._update('apiToken', e.target.value)}
           />
-        </label>
+        </div>
 
-        <label className="todoist-field">
-          <span>{localized('Default project')}</span>
+        <div className="todoist-field">
+          <label htmlFor="todoist-prefs-project">{localized('Default project')}</label>
           <select
+            id="todoist-prefs-project"
             value={settings.defaultProjectId}
             onChange={(e: any) => this._update('defaultProjectId', e.target.value)}
           >
-            <option value="">{localized('Inbox (no project)')}</option>
             {projects.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
               </option>
             ))}
           </select>
-        </label>
+        </div>
 
-        <label className="todoist-field">
-          <span>{localized('Default due date')}</span>
+        <div className="todoist-field">
+          <label htmlFor="todoist-prefs-due">{localized('Default due date')}</label>
           <input
+            id="todoist-prefs-due"
             type="text"
             value={settings.defaultDueString}
             placeholder="tomorrow / 2026-12-31 (optional)"
             onChange={(e: any) => this._update('defaultDueString', e.target.value)}
           />
-        </label>
+        </div>
 
-        <label className="todoist-field todoist-field-checkbox">
+        <div className="todoist-field todoist-field-checkbox">
           <input
+            id="todoist-prefs-snippet"
             type="checkbox"
             checked={settings.includeSnippet}
             onChange={(e: any) => this._update('includeSnippet', e.target.checked)}
           />
-          <span>{localized('Include an email preview in the task notes')}</span>
-        </label>
+          <label htmlFor="todoist-prefs-snippet">
+            {localized('Include an email preview in the task notes')}
+          </label>
+        </div>
 
-        <label className="todoist-field todoist-field-checkbox">
+        <div className="todoist-field todoist-field-checkbox">
           <input
+            id="todoist-prefs-link"
             type="checkbox"
             checked={settings.includeLink}
             onChange={(e: any) => this._update('includeLink', e.target.checked)}
           />
-          <span>{localized('Include a Mailspring link in the task notes')}</span>
-        </label>
+          <label htmlFor="todoist-prefs-link">
+            {localized('Include a Mailspring link in the task notes')}
+          </label>
+        </div>
 
         <div className="todoist-preferences-actions">
           <button className="btn" disabled={testing} onClick={this._onTest}>

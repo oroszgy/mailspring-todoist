@@ -1,83 +1,163 @@
 @import "ui-variables";
 @import "ui-mixins";
 
+// The plugin's only stylesheet.
+//
+// Mailspring already styles `input`, `select` and the popover chrome
+// globally, so this file stays out of the way: it lays the content out and
+// fills the few gaps Mailspring leaves (labels, the textarea's border, the
+// select's box, spacing).
+//
+// Only variables that Mailspring actually defines may be used here: a single
+// undefined variable fails the whole LESS compile, and Mailspring swallows
+// that failure and ships an empty stylesheet. `npm run check:styles` catches
+// it before Mailspring ever sees the file.
+
 .todoist-create-popover {
-  width: 320px;
-  padding: 12px;
-  background: @background-primary;
-  border: 1px solid @border-color-divider;
-  border-radius: 4px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+  width: 340px;
+  padding: @padding-large-vertical @padding-large-horizontal;
+  color: @text-color;
+  font-size: @font-size-small;
+
+  .todoist-popover-header {
+    display: flex;
+    align-items: center;
+    gap: @spacing-half;
+    padding-bottom: @padding-base-vertical;
+    margin-bottom: @padding-large-vertical;
+    border-bottom: 1px solid @border-color-divider;
+  }
+
+  .todoist-popover-icon {
+    width: 16px;
+    height: 16px;
+    flex: none;
+  }
 
   .todoist-popover-title {
-    font-weight: 600;
-    margin-bottom: 8px;
+    font-size: @font-size;
+    font-weight: @font-weight-semi-bold;
+    color: @text-color;
   }
 
   .todoist-popover-warning,
   .todoist-popover-error {
-    color: @text-color-error;
-    font-size: 12px;
-    margin-bottom: 8px;
+    margin-bottom: @padding-base-vertical;
+    padding: @padding-small-vertical @padding-small-horizontal;
+    border-radius: @border-radius-base;
+    font-size: @font-size-smaller;
+    line-height: @line-height-computed;
+  }
+
+  .todoist-popover-warning {
+    background: fadeout(@color-warning, 85%);
+  }
+
+  .todoist-popover-error {
+    background: fadeout(@color-danger, 88%);
+    color: @text-color;
   }
 
   .todoist-popover-done {
-    padding: 12px 0;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: @spacing-half;
+    padding: @spacing-double 0;
+    color: @color-success;
+    font-size: @font-size;
   }
 
   .todoist-field {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 8px;
+    margin-bottom: @padding-large-vertical;
 
-    > span {
-      font-size: 11px;
+    > label {
+      display: block;
+      margin-bottom: @spacing-quarter;
+      font-size: @font-size-smaller;
       color: @text-color-subtle;
-      margin-bottom: 3px;
     }
 
-    input,
-    textarea,
-    select {
+    > input,
+    > select {
       width: 100%;
+    }
+
+    > select {
+      padding: 0 @padding-xs-horizontal;
+      line-height: @line-height-computed;
+      border-radius: @border-radius-base;
+    }
+
+    > textarea {
+      width: 100%;
+      min-height: 44px;
+      padding: @padding-small-vertical @padding-xs-horizontal;
+      border: 1px solid @input-border-color;
+      border-radius: @border-radius-base;
+      background: @input-bg;
+      color: @text-color;
+      font-size: @font-size-smaller;
+      line-height: @line-height-computed;
+      resize: vertical;
     }
   }
 
   .todoist-due-presets {
     display: flex;
-    gap: 6px;
-    margin-bottom: 8px;
-
-    button {
-      flex: 1;
-    }
+    gap: @spacing-quarter;
+    margin-top: @spacing-quarter;
   }
 
   .todoist-popover-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 6px;
-    margin-top: 4px;
+    gap: @spacing-half;
+    padding-top: @padding-base-vertical;
+    border-top: 1px solid @border-color-divider;
+  }
+}
+
+// The toolbar button in the thread list. Mailspring injects it into a
+// column, so it has to be told to stay on one line.
+.todoist-thread-toolbar-button {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  img {
+    width: 16px;
+    height: 16px;
   }
 }
 
 .todoist-preferences {
-  padding: 16px;
+  width: 100%;
+  padding: @spacing-double;
   max-width: 520px;
+  color: @text-color;
+  font-size: @font-size;
 
   .todoist-preferences-intro {
     color: @text-color-subtle;
-    margin-bottom: 12px;
+    margin-bottom: @spacing-standard;
   }
 
   .todoist-field {
-    display: block;
-    margin-bottom: 12px;
+    margin-bottom: @spacing-standard;
 
-    > span {
+    > label {
       display: block;
-      margin-bottom: 4px;
+      margin-bottom: @spacing-quarter;
+      font-size: @font-size-smaller;
+      color: @text-color-subtle;
     }
 
     input[type="text"],
@@ -85,29 +165,36 @@
     select {
       width: 100%;
     }
+
+    select {
+      padding: 0 @padding-xs-horizontal;
+      line-height: @line-height-computed;
+      border-radius: @border-radius-base;
+    }
   }
 
   .todoist-field-checkbox {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: @spacing-half;
 
-    > span {
+    > label {
       margin: 0;
+      font-size: @font-size;
+      color: @text-color;
     }
   }
-
   .todoist-preferences-actions {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: @spacing-standard;
 
     .todoist-preferences-status {
       color: @text-color-subtle;
     }
 
     .todoist-preferences-error {
-      color: @text-color-error;
+      color: @color-danger;
     }
   }
 }

@@ -16,7 +16,8 @@ const API_BASE = '/api/v1';
 export interface TodoistProject {
   id: string;
   name: string;
-  is_inbox_project?: boolean;
+  /** v1 spells it `inbox_project`; the old `is_inbox_project` is a v2 name. */
+  inbox_project?: boolean;
   parent_id?: string | null;
 }
 

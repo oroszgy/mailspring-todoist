@@ -1,8 +1,10 @@
 import { React, Actions, localized } from 'mailspring-exports';
+import { RetinaImg } from 'mailspring-component-kit';
 
 import { getSettings } from './store';
 import * as Todoist from './todoist-client';
 import { TaskDraft } from './task-builder';
+import { TODOIST_ICON } from './todoist-icon';
 
 interface CreateTaskPopoverProps {
   draft: TaskDraft;
@@ -28,12 +30,11 @@ function isoDate(offsetDays: number): string {
 }
 
 /**
- * The shared "create a task" form, opened from either toolbar button.
+ * The shared "create a task" form, opened from the thread toolbar button.
  *
  * TODO:
- *  - multi-select: create one task per selected thread
- *  - section / label pickers
- *  - remember the last-used project + due date
+ *  - sections and labels pickers
+ *  - remember the last-used project
  */
 export default class CreateTaskPopover extends React.Component<
   CreateTaskPopoverProps,
@@ -60,7 +61,14 @@ export default class CreateTaskPopover extends React.Component<
 
     this.setState({ loadingProjects: true });
     Todoist.getProjects(apiToken)
-      .then((projects) => this.setState({ projects, loadingProjects: false, error: null }))
+      .then((projects) => {
+        // The Inbox is a project like any other - it is what a task lands in
+        // when no project is chosen, so it is selected by default rather than
+        // being offered as a separate "no project" option.
+        const inbox = projects.find((p) => p.inbox_project);
+        const projectId = this.state.projectId || (inbox && inbox.id) || '';
+        this.setState({ projects, projectId, loadingProjects: false, error: null });
+      })
       .catch((err) => this.setState({ loadingProjects: false, error: err.message }));
   }
 
@@ -90,7 +98,14 @@ export default class CreateTaskPopover extends React.Component<
 
     return (
       <div className="todoist-create-popover">
-        <div className="todoist-popover-title">{localized('Create Todoist task')}</div>
+        <div className="todoist-popover-header">
+          <RetinaImg
+            url={TODOIST_ICON}
+            mode={RetinaImg.Mode.ContentPreserve}
+            className="todoist-popover-icon"
+          />
+          <span className="todoist-popover-title">{localized('Create Todoist task')}</span>
+        </div>
 
         {this.props.needsToken ? (
           <div className="todoist-popover-warning">
@@ -99,61 +114,67 @@ export default class CreateTaskPopover extends React.Component<
         ) : null}
 
         {s.done ? (
-          <div className="todoist-popover-done">{localized('Task created.')}</div>
+          <div className="todoist-popover-done">
+            <span aria-hidden="true">✓</span>
+            <span>{localized('Task created.')}</span>
+          </div>
         ) : (
           <div className="todoist-popover-form">
-            <label className="todoist-field">
-              <span>{localized('Title')}</span>
+            <div className="todoist-field">
+              <label htmlFor="todoist-task-title">{localized('Title')}</label>
               <input
+                id="todoist-task-title"
                 type="text"
                 value={s.content}
                 onChange={(e: any) => this.setState({ content: e.target.value })}
               />
-            </label>
+            </div>
 
-            <label className="todoist-field">
-              <span>{localized('Notes')}</span>
-              <textarea
-                rows={3}
-                value={s.description}
-                onChange={(e: any) => this.setState({ description: e.target.value })}
-              />
-            </label>
-
-            <label className="todoist-field">
-              <span>{localized('Project')}</span>
+            <div className="todoist-field">
+              <label htmlFor="todoist-task-project">{localized('Project')}</label>
               <select
+                id="todoist-task-project"
                 value={s.projectId}
+                disabled={s.loadingProjects}
                 onChange={(e: any) => this.setState({ projectId: e.target.value })}
               >
-                <option value="">{localized('Inbox')}</option>
                 {s.projects.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.name}
                   </option>
                 ))}
               </select>
-            </label>
+            </div>
 
-            <label className="todoist-field">
-              <span>{localized('Due date')}</span>
+            <div className="todoist-field">
+              <label htmlFor="todoist-task-due">{localized('Due date')}</label>
               <input
+                id="todoist-task-due"
                 type="date"
                 value={s.dueDate}
                 onChange={(e: any) => this.setState({ dueDate: e.target.value })}
               />
-            </label>
+              <div className="todoist-due-presets">
+                <button className="btn btn-small" onClick={() => this.setState({ dueDate: isoDate(0) })}>
+                  {localized('Today')}
+                </button>
+                <button className="btn btn-small" onClick={() => this.setState({ dueDate: isoDate(1) })}>
+                  {localized('Tomorrow')}
+                </button>
+                <button className="btn btn-small" onClick={() => this.setState({ dueDate: isoDate(7) })}>
+                  {localized('Next week')}
+                </button>
+              </div>
+            </div>
 
-            <div className="todoist-due-presets">
-              <button onClick={() => this.setState({ dueDate: isoDate(0) })}>
-                {localized('Today')}
-              </button>
-              <button onClick={() => this.setState({ dueDate: isoDate(1) })}>
-                {localized('Tomorrow')}
-              </button>
-              <button onClick={() => this.setState({ dueDate: isoDate(7) })}>
-                {localized('Next week')}
-              </button>
+            <div className="todoist-field">
+              <label htmlFor="todoist-task-notes">{localized('Notes')}</label>
+              <textarea
+                id="todoist-task-notes"
+                rows={2}
+                value={s.description}
+                onChange={(e: any) => this.setState({ description: e.target.value })}
+              />
             </div>
 
             {s.error ? <div className="todoist-popover-error">{s.error}</div> : null}

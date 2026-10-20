@@ -5,7 +5,6 @@ import {
 } from 'mailspring-exports';
 
 import TodoistThreadButton from './thread-toolbar-button';
-import TodoistMessageButton from './message-header-button';
 
 /**
  * Config schema for the plugin.
@@ -53,11 +52,6 @@ export function activate() {
     role: 'ThreadActionsToolbarButton',
   });
 
-  // Button in the header of an open message.
-  ComponentRegistry.register(TodoistMessageButton, {
-    role: 'message:BodyHeader',
-  });
-
   preferencesTab = new PreferencesUIStore.TabItem({
     tabId: 'Todoist',
     displayName: localized('Todoist'),
@@ -68,10 +62,9 @@ export function activate() {
 
 export function deactivate() {
   ComponentRegistry.unregister(TodoistThreadButton);
-  ComponentRegistry.unregister(TodoistMessageButton);
 
   if (preferencesTab) {
-    PreferencesUIStore.unregisterPreferencesTab(preferencesTab.sectionId);
+    PreferencesUIStore.unregisterPreferencesTab(preferencesTab.tabId);
     preferencesTab = null;
   }
 }

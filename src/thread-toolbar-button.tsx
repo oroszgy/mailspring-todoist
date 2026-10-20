@@ -4,17 +4,7 @@ import { RetinaImg } from 'mailspring-component-kit';
 import CreateTaskPopover from './create-popover';
 import { draftFromThread } from './task-builder';
 import { hasToken } from './store';
-
-// Mask-mode SVG tinted with the toolbar's icon colour. 16x16 matches the
-// built-in thread toolbar icons.
-const CHECK_ICON =
-  'data:image/svg+xml,' +
-  encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">' +
-      '<path d="M2 2h12v12H2V2zm1.5 1.5v9h9v-9h-9z"/>' +
-      '<path d="M7 10.6 4.2 7.8l1.06-1.06L7 8.48l3.74-3.74L11.8 5.8z"/>' +
-      '</svg>'
-  );
+import { TODOIST_ICON } from './todoist-icon';
 
 /**
  * Button in the thread list toolbar.
@@ -49,14 +39,14 @@ export default class TodoistThreadButton extends React.Component<any, any> {
       'button',
       {
         tabIndex: -1,
-        className: 'btn btn-toolbar',
+        className: 'btn btn-toolbar todoist-thread-toolbar-button',
         title: 'Create Todoist task',
         'aria-label': 'Create Todoist task',
         onClick: this._onClick,
       },
       React.createElement(RetinaImg, {
-        url: CHECK_ICON,
-        mode: RetinaImg.Mode.ContentIsMask,
+        url: TODOIST_ICON,
+        mode: RetinaImg.Mode.ContentPreserve,
         'aria-hidden': 'true',
       })
     );
