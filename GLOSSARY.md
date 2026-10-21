@@ -47,3 +47,14 @@ _Avoid_: Modal, dialog, popup
 **Quick-add**:
 Creating a task straight from the source email, without opening the popover.
 _Avoid_: Instant add, one-click add, silent create
+
+**Sender**:
+The person who wrote the newest message of a source email. A thread's
+participants also include the recipients, so they are not the sender.
+_Avoid_: Participant, author, contact
+
+**Task notes**:
+The text of a task: the sender, a preview of the source email and a link
+back into Mailspring. Todoist calls it the task's description.
+_Avoid_: Description, body, comment
+
