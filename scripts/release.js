@@ -47,7 +47,13 @@ function changelogNotes(version) {
 
   const rest = changelog.slice(match.index + match[0].length);
   const next = rest.search(/^##\s+/m);
-  return (next === -1 ? rest : rest.slice(0, next)).trim();
+  const body = next === -1 ? rest : rest.slice(0, next);
+
+  // The link definitions at the end of the file belong to the changelog, not
+  // to the release notes.
+  return body
+    .replace(/^\[[^\]]+\]:.*$/gm, '')
+    .trim();
 }
 
 function main() {
