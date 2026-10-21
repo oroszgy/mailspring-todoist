@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      # Compiles src/ to lib/ and checks the stylesheet. The stylesheet check
+      # needs a Mailspring to compile against, so it is skipped here - it runs
+      # in the release script, where a Mailspring is a given.
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+      # lib/ is committed - it is what Mailspring loads - so it has to be in
+      # step with src/.
+      - name: The committed build is up to date
+        run: git diff --exit-code lib/

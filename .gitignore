@@ -8,3 +8,10 @@ node_modules/
 
 .agents/
 .opencode/
+
+# The packaged plugin, written by `npm run package`.
+dist/
+
+# The lockfile of the local agent skills. The skills themselves are not in
+# the repository, so neither is their lockfile.
+skills-lock.json

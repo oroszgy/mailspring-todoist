@@ -1,0 +1,51 @@
+name: Bug report
+description: Something does not work the way it should
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce it
+      description: The steps that lead to the problem.
+    validations:
+      required: true
+
+  - type: input
+    id: mailspring-version
+    attributes:
+      label: Mailspring version
+      placeholder: 1.11.0
+    validations:
+      required: true
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      description: The version of this plugin you are using.
+      placeholder: 0.1.0
+    validations:
+      required: true
+
+  - type: input
+    id: system
+    attributes:
+      label: System
+      placeholder: macOS 15.3 / Ubuntu 24.04 / Windows 11
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: >
+        The Mailspring console output, if you have it. Developer > Show
+        Mailspring Logs, or the developer tools of the main window.
+      render: text

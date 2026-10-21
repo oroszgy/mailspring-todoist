@@ -2,14 +2,41 @@
   "name": "mailspring-todoist",
   "version": "0.1.0",
   "description": "Create Todoist tasks straight from Mailspring with one click.",
-  "main": "./lib/main",
+  "main": "./lib/main.js",
   "license": "MIT",
   "private": true,
+  "author": "György Orosz",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oroszgy/mailspring-todoist.git"
+  },
+  "bugs": {
+    "url": "https://github.com/oroszgy/mailspring-todoist/issues"
+  },
+  "homepage": "https://github.com/oroszgy/mailspring-todoist#readme",
+  "keywords": [
+    "mailspring",
+    "mailspring-plugin",
+    "todoist",
+    "email",
+    "tasks"
+  ],
+  "files": [
+    "lib",
+    "styles",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "build": "tsc && node scripts/check-styles.js",
+    "build:release": "tsc && node scripts/check-styles.js --strict",
     "watch": "tsc --watch",
     "check:styles": "node scripts/check-styles.js",
     "install-local": "node scripts/install-local.js",
+    "package": "node scripts/package.js",
+    "release": "node scripts/release.js",
+    "screenshots": "node scripts/render-screenshots.js",
     "pretest": "tsc",
     "test": "node --test \"test/**/*.test.js\"",
     "clean": "rm -rf lib"

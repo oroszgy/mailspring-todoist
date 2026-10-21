@@ -9,7 +9,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const CONTENTS = ['package.json', 'lib', 'styles', 'README.md'];
+const CONTENTS = ['package.json', 'lib', 'styles', 'README.md', 'LICENSE', 'CHANGELOG.md'];
 
 function packagesDir() {
   if (process.platform === 'win32') {
