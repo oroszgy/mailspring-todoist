@@ -38,11 +38,12 @@
     "release": "node scripts/release.js",
     "screenshots": "node scripts/render-screenshots.js",
     "pretest": "tsc",
-    "test": "node --test \"test/**/*.test.js\"",
+    "test": "node --test",
     "clean": "rm -rf lib"
   },
   "engines": {
-    "mailspring": ">=1.6.3"
+    "mailspring": ">=1.6.3",
+    "node": ">=18"
   },
   "windowTypes": {
     "default": true
