@@ -10,6 +10,8 @@
     "watch": "tsc --watch",
     "check:styles": "node scripts/check-styles.js",
     "install-local": "node scripts/install-local.js",
+    "pretest": "tsc",
+    "test": "node --test \"test/**/*.test.js\"",
     "clean": "rm -rf lib"
   },
   "engines": {
@@ -22,6 +24,8 @@
     "@types/node": "^20.11.30",
     "@types/react": "^16.14.0",
     "less": "^4.9.1",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "typescript": "^5.4.5"
   }
 }

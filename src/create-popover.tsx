@@ -4,6 +4,7 @@ import { RetinaImg } from 'mailspring-component-kit';
 import { getSettings } from './store';
 import * as Todoist from './todoist-client';
 import { TaskDraft } from './task-builder';
+import { dueFields, isIsoDate, isoDate } from './due-date';
 import { TODOIST_ICON } from './todoist-icon';
 
 interface CreateTaskPopoverProps {
@@ -21,12 +22,6 @@ interface CreateTaskPopoverState {
   saving: boolean;
   error: string | null;
   done: boolean;
-}
-
-function isoDate(offsetDays: number): string {
-  const d = new Date();
-  d.setDate(d.getDate() + offsetDays);
-  return d.toISOString().slice(0, 10);
 }
 
 /**
@@ -47,7 +42,11 @@ export default class CreateTaskPopover extends React.Component<
     content: this.props.draft.content,
     description: this.props.draft.description,
     projectId: getSettings().defaultProjectId,
-    dueDate: '',
+    // A default due date that is a plain date prefills the date field; a
+    // natural-language one is sent to Todoist as it is.
+    dueDate: isIsoDate(getSettings().defaultDueString)
+      ? getSettings().defaultDueString!.trim()
+      : '',
     projects: [],
     loadingProjects: false,
     saving: false,
@@ -84,7 +83,8 @@ export default class CreateTaskPopover extends React.Component<
       content: this.state.content || '(no subject)',
       description: this.state.description || undefined,
       project_id: this.state.projectId || undefined,
-      due_date: this.state.dueDate || undefined,
+      // Exactly one of due_date / due_string - Todoist rejects both.
+      ...dueFields(this.state.dueDate, getSettings().defaultDueString),
     })
       .then(() => {
         this.setState({ saving: false, done: true });

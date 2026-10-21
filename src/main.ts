@@ -68,7 +68,3 @@ export function deactivate() {
     preferencesTab = null;
   }
 }
-
-export function serialize() {
-  return {};
-}
