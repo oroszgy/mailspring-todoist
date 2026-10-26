@@ -3,6 +3,7 @@ import { RetinaImg } from 'mailspring-component-kit';
 
 import { getSettings } from './store';
 import * as Todoist from './todoist-client';
+import { notifyTaskCreated } from './task-notice';
 import { TaskDraft } from './task-builder';
 import { dueFields, isIsoDate, isoDate } from './due-date';
 import { TODOIST_ICON } from './todoist-icon';
@@ -54,6 +55,17 @@ export default class CreateTaskPopover extends React.Component<
     done: false,
   };
 
+  _unmounted = false;
+  _closeTimeout: number | null = null;
+
+  componentWillUnmount() {
+    this._unmounted = true;
+    if (this._closeTimeout !== null) {
+      window.clearTimeout(this._closeTimeout);
+      this._closeTimeout = null;
+    }
+  }
+
   componentDidMount() {
     const { apiToken } = getSettings();
     if (!apiToken) return;
@@ -86,11 +98,23 @@ export default class CreateTaskPopover extends React.Component<
       // Exactly one of due_date / due_string - Todoist rejects both.
       ...dueFields(this.state.dueDate, getSettings().defaultDueString),
     })
-      .then(() => {
+      .then((task) => {
+        // The popover can be dismissed while the request is in flight (a
+        // click outside closes it), but the task still exists. Raise the
+        // notice even then, so the user learns that it succeeded.
+        notifyTaskCreated(task.content, Todoist.taskUrl(task.id));
+
+        if (this._unmounted) return;
         this.setState({ saving: false, done: true });
-        window.setTimeout(() => Actions.closePopover(), 800);
+        this._closeTimeout = window.setTimeout(() => {
+          this._closeTimeout = null;
+          Actions.closePopover();
+        }, 800);
       })
-      .catch((err) => this.setState({ saving: false, error: err.message }));
+      .catch((err) => {
+        if (this._unmounted) return;
+        this.setState({ saving: false, error: err.message });
+      });
   };
 
   render() {

@@ -132,6 +132,8 @@ function render() {
 
   const CreateTaskPopover = require(path.join(libDir, 'create-popover.js')).default;
   const PreferencesTab = require(path.join(libDir, 'preferences-tab.js')).default;
+  const TaskCreatedToast = require(path.join(libDir, 'task-created-toast.js')).default;
+  const { notifyTaskCreated } = require(path.join(libDir, 'task-notice.js'));
   const { draftFromThread } = require(path.join(libDir, 'task-builder.js'));
   const ICON = require(path.join(libDir, 'todoist-icon.js')).TODOIST_ICON;
 
@@ -174,14 +176,19 @@ function render() {
     )
   );
 
-  return { popover, warning, done, preferences };
+  // The toast is seeded through the real notice store, so the picture shows
+  // the component Mailspring renders rather than a hand-drawn copy.
+  notifyTaskCreated('Re: invoice for October', 'https://app.todoist.com/app/task/6X7rM');
+  const toast = ReactDOMServer.renderToStaticMarkup(React.createElement(TaskCreatedToast));
+
+  return { popover, warning, done, preferences, toast };
 }
 
 async function build() {
   const { compileStylesheet } = require(path.join(REPO, 'scripts', 'mailspring-styles.js'));
 
   writeStubs();
-  const { popover, warning, done, preferences } = render();
+  const { popover, warning, done, preferences, toast } = render();
   const plugin = await compileStylesheet(path.join(REPO, 'styles', 'index.less'));
 
   const html = `<!doctype html>
@@ -196,6 +203,8 @@ async function build() {
   .fixed-popover-container .fixed-popover { position: static; }
   .stage { display: flex; align-items: flex-start; gap: 24px; }
   .preferences-host { background: #fff; border: 1px solid #dfe1e5; width: 560px; }
+  .toast-host { position: relative; height: 88px; margin-top: 24px; background: #fff; border: 1px solid #dfe1e5; }
+  .toast-host .todoist-task-toast-region { position: static; padding-top: 24px; }
 </style>
 </head>
 <body>
@@ -213,6 +222,7 @@ async function build() {
       <div class="todoist-preferences">${preferences}</div>
     </div>
   </div>
+  <div class="toast-host">${toast}</div>
 </body></html>`;
 
   const htmlPath = path.join(WORK, 'preview.html');

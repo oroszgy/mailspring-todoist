@@ -1,10 +1,12 @@
 import {
   ComponentRegistry,
   PreferencesUIStore,
+  WorkspaceStore,
   localized,
 } from 'mailspring-exports';
 
 import TodoistThreadButton from './thread-toolbar-button';
+import TaskCreatedToast from './task-created-toast';
 
 /**
  * Config schema for the plugin.
@@ -45,12 +47,22 @@ export const config = {
 };
 
 let preferencesTab: any = null;
+let toastRegistered = false;
 
 export function activate() {
   // Button in the thread list toolbar (works with the selected thread(s)).
   ComponentRegistry.register(TodoistThreadButton, {
     role: 'ThreadActionsToolbarButton',
   });
+
+  // Confirmation in the bottom of the main window, on the same footer as
+  // Mailspring's own undo toast. Other window types have no thread list.
+  if (AppEnv.isMainWindow()) {
+    ComponentRegistry.register(TaskCreatedToast, {
+      location: WorkspaceStore.Sheet.Global.Footer,
+    });
+    toastRegistered = true;
+  }
 
   preferencesTab = new PreferencesUIStore.TabItem({
     tabId: 'Todoist',
@@ -62,6 +74,11 @@ export function activate() {
 
 export function deactivate() {
   ComponentRegistry.unregister(TodoistThreadButton);
+
+  if (toastRegistered) {
+    ComponentRegistry.unregister(TaskCreatedToast);
+    toastRegistered = false;
+  }
 
   if (preferencesTab) {
     PreferencesUIStore.unregisterPreferencesTab(preferencesTab.tabId);

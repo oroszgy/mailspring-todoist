@@ -118,6 +118,101 @@
   }
 }
 
+// The "task created" toast. Mailspring's undo toast is registered on the same
+// footer and sits 10px from the bottom with a 45px bar, so this one sits above
+// it instead of covering it.
+.todoist-task-toast-region {
+  position: absolute;
+  bottom: 64px;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  text-align: center;
+  pointer-events: none;
+}
+
+.todoist-task-toast {
+  display: inline-flex;
+  align-items: center;
+  gap: @spacing-half;
+  max-width: 90%;
+  padding: @padding-small-vertical @padding-small-horizontal;
+  border-radius: @border-radius-base;
+  background: @gray-darker;
+  color: @background-primary;
+  font-size: @font-size-small;
+  line-height: @line-height-computed;
+  text-align: left;
+  pointer-events: initial;
+  animation: todoist-task-toast-in 150ms ease-out;
+}
+
+.todoist-task-toast-check {
+  flex: none;
+  color: @color-success;
+  font-weight: @font-weight-semi-bold;
+}
+
+.todoist-task-toast-message {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.todoist-task-toast-title {
+  color: fadeout(@background-primary, 25%);
+}
+
+.todoist-task-toast-action {
+  flex: none;
+  padding: 3px 8px;
+  border: 1px solid fadeout(@background-primary, 20%);
+  border-radius: @border-radius-base;
+  background: fade(@black, 20%);
+  color: @background-primary;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    background: fade(@black, 30%);
+    border-color: fadeout(@background-primary, 30%);
+  }
+
+  &:active {
+    background: fade(@black, 45%);
+    border-color: fadeout(@background-primary, 40%);
+  }
+}
+
+.todoist-task-toast-close {
+  flex: none;
+  padding: 0 @spacing-quarter;
+  border: none;
+  background: none;
+  color: fadeout(@background-primary, 30%);
+  font-size: @font-size-large;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    color: @background-primary;
+  }
+}
+
+@keyframes todoist-task-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 // The toolbar button in the thread list. Mailspring injects it into a
 // column, so it has to be told to stay on one line.
 .todoist-thread-toolbar-button {

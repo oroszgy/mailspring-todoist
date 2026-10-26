@@ -44,6 +44,11 @@ _Avoid_: Fallback project, home project
 The small editor Mailspring opens over the window, where a task draft is confirmed.
 _Avoid_: Modal, dialog, popup
 
+**Task toast**:
+The small confirmation at the bottom of the Mailspring window after a task is
+created; it names the task and links to it in Todoist.
+_Avoid_: Notification, snackbar, banner
+
 **Quick-add**:
 Creating a task straight from the source email, without opening the popover.
 _Avoid_: Instant add, one-click add, silent create

@@ -27,7 +27,6 @@ export interface TodoistTask {
   description: string;
   project_id: string;
   due?: any;
-  url?: string;
 }
 
 export interface CreateTaskInput {
@@ -133,6 +132,16 @@ export async function getProjects(token: string): Promise<TodoistProject[]> {
 
 export function createTask(token: string, input: CreateTaskInput): Promise<TodoistTask> {
   return request<TodoistTask>(token, 'POST', '/tasks', input);
+}
+
+/**
+ * The web address of a task.
+ *
+ * API v1 dropped the `url` field from the task object, so the link is built
+ * from the id instead: https://app.todoist.com/app/task/<id>.
+ */
+export function taskUrl(id: string): string {
+  return `https://app.todoist.com/app/task/${encodeURIComponent(id)}`;
 }
 
 export async function testConnection(token: string): Promise<boolean> {

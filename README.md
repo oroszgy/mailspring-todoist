@@ -6,7 +6,7 @@ Select a thread, click the Todoist button, and a small popover opens with the
 task ready to edit: the subject as the title, the sender, a preview of the
 thread and a link back into Mailspring in the notes.
 
-![The create-task popover, the preferences pane and the two other states of the popover](docs/screenshots/popover.png)
+![The create-task popover, the preferences pane, one other state of the popover and the confirmation toast](docs/screenshots/popover.png)
 
 ## Features
 
@@ -16,6 +16,9 @@ thread and a link back into Mailspring in the notes.
   and *Next week* presets.
 - **A link back to the email.** The notes carry a `mailspring://` link that
   reopens the thread in Mailspring.
+- **A confirmation with a link.** A small toast appears when the task is
+  created, names it and opens it in Todoist - even if the popover was
+  dismissed while the request was in flight.
 - **A preferences pane** for the API token, the default project and the
   default due date, with a *Test connection* button.
 - **No runtime dependencies.** The plugin talks to Todoist's API v1 with
@@ -83,7 +86,8 @@ leaves your machine except to reach `api.todoist.com`.
 4. **Create task**.
 
 The task lands in Todoist with the title, the notes and - if you picked one -
-the project and the due date.
+the project and the due date. A toast at the bottom of the window confirms it
+and links to the new task in Todoist.
 
 ## How it works
 
@@ -96,6 +100,8 @@ the project and the due date.
 | `src/sender.ts` | Who wrote the last message in a thread |
 | `src/due-date.ts` | The due date, as a date or as natural language |
 | `src/create-popover.tsx` | The create-task popover |
+| `src/task-notice.ts` | The "task created" notice, independent of React |
+| `src/task-created-toast.tsx` | The confirmation toast in the main window |
 | `src/thread-toolbar-button.tsx` | `ThreadActionsToolbarButton` |
 | `src/todoist-icon.ts` | Todoist's mark, inlined from the official favicon |
 | `src/preferences-tab.tsx` | Preferences pane |
@@ -112,6 +118,9 @@ the project and the due date.
   (which is `items[0]`).
 - `PreferencesUIStore.registerPreferencesTab(...)` - the pane in Mailspring's
   preferences.
+- `ComponentRegistry.register(..., { location: WorkspaceStore.Sheet.Global.Footer })`
+  - the toast at the bottom of the main window, on the same footer Mailspring
+  uses for its undo toast.
 - `Actions.openPopover(...)` / `Actions.closePopover()`
 
 ### The link back to the email

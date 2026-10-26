@@ -20,6 +20,13 @@ const stubs = {
     React: require('react'),
     Actions: { openPopover() {}, closePopover() {} },
     localized: (message) => message,
+    WorkspaceStore: {
+      Sheet: {
+        Global: {
+          Footer: { id: 'Sheet:Global:Footer' },
+        },
+      },
+    },
     ComponentRegistry: {
       register: (component, options) => registered.components.push({ component, options }),
       unregister: (component) => {
@@ -41,6 +48,10 @@ const stubs = {
   'mailspring-component-kit': { RetinaImg },
 };
 
+global.AppEnv = {
+  isMainWindow: () => true,
+};
+
 const load = Module._load;
 Module._load = function (request, ...rest) {
   if (stubs[request]) return stubs[request];
@@ -49,13 +60,22 @@ Module._load = function (request, ...rest) {
 
 const main = require('../lib/main');
 const TodoistThreadButton = require('../lib/thread-toolbar-button').default;
+const TaskCreatedToast = require('../lib/task-created-toast').default;
 
 test('activate registers the thread toolbar button', () => {
   main.activate();
 
-  assert.equal(registered.components.length, 1);
+  assert.equal(registered.components.length, 2);
   assert.equal(registered.components[0].component, TodoistThreadButton);
   assert.equal(registered.components[0].options.role, 'ThreadActionsToolbarButton');
+});
+
+test('activate registers the task-created toast on the global footer', () => {
+  assert.equal(registered.components[1].component, TaskCreatedToast);
+  assert.equal(
+    registered.components[1].options.location,
+    stubs['mailspring-exports'].WorkspaceStore.Sheet.Global.Footer
+  );
 });
 
 test('activate registers the preferences tab', () => {
@@ -64,11 +84,22 @@ test('activate registers the preferences tab', () => {
   assert.equal(registered.preferencesTabs[0].displayName, 'Todoist');
 });
 
-test('deactivate unregisters both', () => {
+test('deactivate unregisters everything', () => {
   main.deactivate();
 
   assert.equal(registered.components.length, 0);
   assert.equal(registered.preferencesTabs.length, 0);
+});
+
+test('other windows get the button but not the toast', () => {
+  global.AppEnv.isMainWindow = () => false;
+  main.activate();
+
+  assert.equal(registered.components.length, 1);
+  assert.equal(registered.components[0].component, TodoistThreadButton);
+
+  main.deactivate();
+  global.AppEnv.isMainWindow = () => true;
 });
 
 test('the button renders with the Todoist mark', () => {

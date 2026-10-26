@@ -1,6 +1,6 @@
 {
   "name": "mailspring-todoist",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Create Todoist tasks straight from Mailspring with one click.",
   "main": "./lib/main.js",
   "license": "MIT",

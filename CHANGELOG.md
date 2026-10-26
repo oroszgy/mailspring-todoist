@@ -5,6 +5,20 @@ All notable changes to this project are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.2.0] - 2026-10-26
+
+### Added
+
+- A confirmation toast at the bottom of the window when a task is created.
+  It names the task and links to it in Todoist, and it still appears when
+  the create-popover was dismissed while the request was in flight.
+
+### Fixed
+
+- The popover's close timer no longer closes a popover opened right after it.
+
 ## [0.1.0] - 2026-10-21
 
 The first release.
@@ -28,4 +42,5 @@ The first release.
   natural-language one is sent as `due_string`.
 - The sender is in the task notes, as the README said it would be.
 
+[0.2.0]: https://github.com/oroszgy/mailspring-todoist/releases/tag/v0.2.0
 [0.1.0]: https://github.com/oroszgy/mailspring-todoist/releases/tag/v0.1.0

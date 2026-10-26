@@ -15,6 +15,7 @@ declare module 'mailspring-exports' {
   export const ComponentRegistry: any;
   export const ExtensionRegistry: any;
   export const PreferencesUIStore: any;
+  export const WorkspaceStore: any;
   export const localized: (message: string, ...args: any[]) => string;
   export const Thread: any;
   export const Message: any;
